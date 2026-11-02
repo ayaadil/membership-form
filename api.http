@@ -1,0 +1,44 @@
+@host = http://localhost:3000
+
+### إرسال فورمة العضوية (عام)
+POST {{host}}/api/submit
+Content-Type: application/json
+
+{
+  "full_name": "Test User",
+  "email": "test@example.com",
+  "passport_number": "AB1234567"
+}
+
+### ===== لوحة الإدارة (جرّب أفضل من المتصفح عبر /admin-login.html) =====
+
+### تسجيل دخول
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "adminpassword"
+}
+
+### التحقق من الجلسة
+GET {{host}}/api/auth/me
+
+### عرض + بحث
+GET {{host}}/api/admin/records?page=1&limit=20&q=test
+
+### تعديل
+PUT {{host}}/api/admin/records/1
+Content-Type: application/json
+x-requested-with: membership-admin
+
+{
+  "full_name": "Test U."
+}
+
+### حذف
+DELETE {{host}}/api/admin/records/1
+x-requested-with: membership-admin
+
+### تسجيل خروج
+POST {{host}}/api/auth/logout

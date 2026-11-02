@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d5202c" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#8c0a16" stop-opacity="0.10"/>
+    </linearGradient>
+  </defs>
+  <polygon stroke-linejoin="round" stroke="#b30f1f" stroke-opacity="0.10" stroke-width="0.4" fill="url(#g)"
+    points="50.00,2.00 56.00,17.00 60.50,14.00 62.50,31.00 74.50,24.00 71.00,42.50 89.00,37.00 83.50,52.00 77.00,56.00 81.00,71.00 63.00,62.50 52.70,73.00 52.70,97.00 47.30,97.00 47.30,73.00 37.00,62.50 19.00,71.00 23.00,56.00 16.50,52.00 11.00,37.00 29.00,42.50 25.50,24.00 37.50,31.00 39.50,14.00 44.00,17.00"/>
+</svg>

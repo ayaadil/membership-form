@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Panel - Personal information</title>
+<style>
+  :root { --red:#d32f2f; --red-dark:#b71c1c; --bg:#f3f4f6; --card:#fff; --text:#1f2937; --muted:#6b7280; --border:#e5e7eb; }
+  * { box-sizing: border-box; }
+    /* ===== الخطوة 1: خلفية متدرّجة (5 ألوان - غيّرها من هون) ===== */
+  :root {
+    --g1: #7c1022;   
+    --g2: #b82039;   
+    --g3: #f3d6d9;   
+    --g4: #ebc6ca;   
+    --g5: #7c1022;   
+  }
+  html { background: var(--g1); }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 45% at 15% 0%, rgba(255,255,255,0.20), transparent 70%),
+      linear-gradient(160deg, var(--g1) 0%, var(--g2) 28%, var(--g3) 55%, var(--g4) 82%, var(--g5) 100%);
+  }
+  /* عناصر بتقعد مباشرة على الخلفية: نخليها مقروءة */
+  .empty, .loading { background: #fff; border-radius: 12px; }
+  .pager { width: fit-content; margin-inline: auto; padding: 6px 12px; background: rgba(255,255,255,0.92); border-radius: 999px; }
+
+  /* الجدول يتحرك أفقياً داخل صندوقه على الجوال (بدل ما يخرّب الصفحة) */
+  #tableWrap { overflow-x: auto; border-radius: 12px; }
+  #tableWrap table { min-width: 640px; }
+  body { margin:0; min-height:100svh; background: transparent; font-family:"Tahoma","Segoe UI",sans-serif; color: var(--text); }
+  header {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  header h1 { font-size: 1.1rem; margin: 0; color: var(--red-dark); }
+  button.logout {
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; cursor: pointer; color: var(--text);
+  }
+  main { max-width: 1000px; margin: 24px auto; padding: 0 16px; }
+  .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .toolbar input {
+    flex: 1; min-width: 200px; padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.95rem;
+  }
+  .passport { direction: ltr; unicode-bidi: plaintext; font-family: Consolas, "Courier New", monospace; font-weight: bold; letter-spacing: .5px; white-space: nowrap; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+  th { background: #f9fafb; color: var(--muted); font-weight: bold; }
+  tr:last-child td { border-bottom: none; }
+  .actions button {
+    border: none; background: none; cursor: pointer; font-size: 0.85rem;
+    margin-inline-start: 8px; color: var(--red);
+  }
+  .actions button.danger { color: var(--red-dark); }
+  .empty, .loading { text-align: center; padding: 40px; color: var(--muted); }
+  .pager { display:flex; justify-content:center; gap:10px; margin-top:16px; align-items:center; }
+  .pager button { padding:6px 14px; border:1px solid var(--border); background:#fff; border-radius:6px; cursor:pointer; }
+  .pager button:disabled { opacity:.4; cursor:not-allowed; }
+
+  dialog { border: none; border-radius: 14px; padding: 0; width: 100%; max-width: 420px; }
+  dialog::backdrop { background: rgba(0,0,0,0.4); }
+  .dialog-inner { padding: 24px; }
+  .dialog-inner h2 { margin: 0 0 16px; font-size: 1.1rem; }
+  .dialog-inner label { display:block; font-weight:bold; font-size:0.85rem; margin: 10px 0 4px; }
+  .dialog-inner input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem;
+  }
+  .dialog-actions { display:flex; gap:10px; margin-top: 20px; }
+  .dialog-actions button { flex:1; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+  .dialog-actions .save { background: var(--red); color: #fff; }
+  .dialog-actions .cancel { background: #f3f4f6; color: var(--text); }
+</style>
+<link rel="stylesheet" href="admin.bg.css" />
+</head>
+<body>
+  <header>
+    <h1>Personal Information</h1>
+    <button class="logout" id="logoutBtn">Logout</button>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <input id="searchInput" type="search" autocomplete="off" autofocus
+             placeholder="Search by name or email or full passport number..." />
+    </div>
+
+    <div id="tableWrap">
+      <div class="loading">Loading...</div>
+    </div>
+
+    <div class="pager" id="pager" style="display:none;">
+      <button id="prevBtn">Previous</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn">Next</button>
+    </div>
+  </main>
+
+  <dialog id="editDialog">
+    <div class="dialog-inner">
+      <h2>Edit Request</h2>
+      <form id="editForm">
+        <input type="hidden" id="editId" />
+        <label for="editName">Full Name</label>
+        <input id="editName" required minlength="2" maxlength="100" />
+        <label for="editEmail">Email</label>
+        <input id="editEmail" type="email" required maxlength="255" />
+        <label for="editPassport">Passport Number</label>
+        <input id="editPassport" required minlength="6" maxlength="12" />
+        <div class="dialog-actions">
+          <button type="button" class="cancel" id="cancelEdit">Cancel</button>
+          <button type="submit" class="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script src="admin.js"></script>
+</body>
+</html>

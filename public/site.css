@@ -1,0 +1,305 @@
+/* =====================================================
+   site.css — تصميم الصفحة العامة (الفورم + صفحة الشكر)
+   ألوان كندا: أحمر #D52B1E وأبيض
+   ===================================================== */
+:root {
+  --maple: #D52B1E;
+  --maple-dark: #b01e13;
+  --ink: #1d1818;
+  --muted: #5b504f;
+  --line: #e4d9d7;
+  --paper: #f7f2f1;
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 48px);
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+/* ===== الخلفية: شريطا العلم + ورقة القيقب الكبيرة + أشكال هندسية ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    /* ورقة قيقب كبيرة وهادئة بالمنتصف */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50.00,2.00 56.00,17.00 60.50,14.00 62.50,31.00 74.50,24.00 71.00,42.50 89.00,37.00 83.50,52.00 77.00,56.00 81.00,71.00 63.00,62.50 52.70,73.00 52.70,97.00 47.30,97.00 47.30,73.00 37.00,62.50 19.00,71.00 23.00,56.00 16.50,52.00 11.00,37.00 29.00,42.50 25.50,24.00 37.50,31.00 39.50,14.00 44.00,17.00' fill='%23D52B1E' fill-opacity='.10'/%3E%3C/svg%3E") 50% 46% / min(150vh, 150vw) auto no-repeat,
+    /* حلقات هندسية رفيعة */
+    radial-gradient(circle at 50% 50%, transparent 0 34vmin, rgba(213,43,30,.14) calc(34vmin + 1px), transparent calc(34vmin + 2px)),
+    radial-gradient(circle at 50% 50%, transparent 0 50vmin, rgba(213,43,30,.09) calc(50vmin + 1px), transparent calc(50vmin + 2px)),
+    /* مثلثات مائلة بالزوايا */
+    linear-gradient(135deg, rgba(213,43,30,.10) 0 14%, transparent 14%),
+    linear-gradient(315deg, rgba(213,43,30,.08) 0 12%, transparent 12%),
+    /* شريطا العلم (أحمر - أبيض - أحمر) بحواف ناعمة */
+    linear-gradient(90deg,
+      rgba(213,43,30,.96) 0%, rgba(213,43,30,.88) 11%, rgba(213,43,30,.35) 20%, rgba(213,43,30,0) 27%,
+      rgba(213,43,30,0) 73%, rgba(213,43,30,.35) 80%, rgba(213,43,30,.88) 89%, rgba(213,43,30,.96) 100%),
+    /* توهّج أبيض بالمنتصف */
+    radial-gradient(ellipse 60% 70% at 50% 50%, #ffffff 0%, #f8f3f2 70%, #efe6e4 100%);
+}
+body::after {
+  /* ظل ناعم أسفل الصفحة */
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(90,10,5,.16) 100%);
+}
+
+/* ===== الكارد: شكل غير متماثل (لوحة حمراء + لوحة بيضاء بحافة منحنية) ===== */
+.card {
+  position: relative;
+  width: min(100%, 940px);
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  background: var(--maple);
+  border-radius: 36px 120px 36px 120px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 80px rgba(110, 15, 8, .28),
+    0 10px 28px rgba(0, 0, 0, .10);
+  animation: rise .6s cubic-bezier(.2, .8, .2, 1) both;
+}
+.card--sm { width: min(100%, 860px); }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .card { animation: none; } }
+
+/* ----- اللوحة الحمراء ----- */
+.panel {
+  position: relative;
+  z-index: 0;
+  margin-inline-end: -72px;
+  padding-block: 52px 44px;
+  padding-inline: 40px calc(72px + 30px);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(255,255,255,.16), transparent 55%),
+    linear-gradient(160deg, #e23a2c 0%, var(--maple) 45%, var(--maple-dark) 100%);
+}
+/* ورقة قيقب بيضاء شفافة (علامة مائية) */
+.panel::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-inline-start: -90px;
+  bottom: -70px;
+  width: 340px;
+  height: 340px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50.00,2.00 56.00,17.00 60.50,14.00 62.50,31.00 74.50,24.00 71.00,42.50 89.00,37.00 83.50,52.00 77.00,56.00 81.00,71.00 63.00,62.50 52.70,73.00 52.70,97.00 47.30,97.00 47.30,73.00 37.00,62.50 19.00,71.00 23.00,56.00 16.50,52.00 11.00,37.00 29.00,42.50 25.50,24.00 37.50,31.00 39.50,14.00 44.00,17.00' fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: .14;
+}
+/* أقواس رفيعة */
+.panel::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -90px;
+  inset-inline-end: 40px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.28);
+  box-shadow: 0 0 0 26px rgba(255,255,255,.05);
+}
+
+.badge {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border-radius: 22px 8px 22px 8px;
+  box-shadow: 0 12px 24px rgba(90, 10, 5, .30);
+  margin-bottom: 8px;
+}
+.badge img, .badge svg { width: 40px; height: 40px; display: block; }
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.2vw, 2.15rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.lead {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+.points {
+  margin: 14px 0 0;
+  padding: 18px 0 0;
+  list-style: none;
+  border-top: 1px solid rgba(255,255,255,.35);
+  display: grid;
+  gap: 10px;
+  font-size: .92rem;
+  font-weight: 600;
+}
+.points li { display: flex; align-items: center; gap: 10px; }
+.points li::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 2px 6px 2px 6px;
+}
+
+/* ----- لوحة النموذج (بيضاء، حافتها منحنية فوق اللوحة الحمراء) ----- */
+.formpane {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border-radius: 0 72px 72px 0;
+  padding: 48px 44px 44px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+h2 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.hint { margin: 0 0 24px; font-size: .9rem; color: var(--muted); }
+
+/* ===== الحقول ===== */
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.field label span { color: var(--maple); }
+.control { position: relative; }
+.control input {
+  display: block;
+  width: 100%;
+  height: 52px;
+  padding: 0 48px 0 16px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: #fdfbfb;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 1rem;
+  text-align: right;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.control input::placeholder { color: #7a6e6d; opacity: 1; }
+.control input:hover { border-color: #cdbfbc; }
+.control input:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--maple);
+  box-shadow: 0 0 0 4px rgba(213, 43, 30, .15);
+}
+.control .ico {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  width: 22px;
+  height: 22px;
+  transform: translateY(-50%);
+  color: #8d7f7e;
+  pointer-events: none;
+  transition: color .15s;
+}
+.control .ico svg { width: 100%; height: 100%; }
+.control:focus-within .ico { color: var(--maple); }
+
+/* ===== زر الإرسال ===== */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 54px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--maple);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.08rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(213, 43, 30, .32);
+  transition: background .15s, transform .12s, box-shadow .15s;
+}
+.cta svg { width: 20px; height: 20px; transition: transform .2s; }
+.cta:hover { background: var(--maple-dark); box-shadow: 0 14px 28px rgba(176, 30, 19, .38); }
+.cta:hover svg { transform: translateX(-4px); }
+.cta:active { transform: translateY(1px); }
+.cta:disabled { opacity: .65; cursor: not-allowed; }
+.cta:focus-visible, a:focus-visible { outline: 3px solid rgba(213, 43, 30, .45); outline-offset: 3px; }
+
+.error {
+  display: none;
+  margin: 0 0 16px;
+  padding: 11px 14px;
+  font-size: .9rem;
+  font-weight: 600;
+  color: #8c1a10;
+  background: #fdeeed;
+  border-right: 4px solid var(--maple);
+  border-radius: 6px 12px 12px 6px;
+}
+
+/* ===== صفحة الشكر ===== */
+.done {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  color: #fff;
+  background: var(--maple);
+  border-radius: 26px 8px 26px 8px;
+  box-shadow: 0 14px 28px rgba(213, 43, 30, .32);
+}
+.done svg { width: 40px; height: 40px; }
+.formpane p.msg { margin: 0 0 26px; font-size: 1.02rem; color: var(--muted); }
+
+/* ===== الجوال والشاشات الضيقة ===== */
+@media (max-width: 760px) {
+  .card, .card--sm {
+    grid-template-columns: 1fr;
+    border-radius: 30px 72px 30px 72px;
+  }
+  .panel {
+    margin-inline-end: 0;
+    padding-block: 34px 64px;
+    padding-inline: 28px;
+  }
+  .panel::before { width: 250px; height: 250px; inset-inline-start: -70px; bottom: -40px; }
+  .formpane {
+    margin-top: -34px;
+    border-radius: 34px 34px 0 0;
+    padding: 34px 24px 34px;
+  }
+  .points { display: none; }
+}
