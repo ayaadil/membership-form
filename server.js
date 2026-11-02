@@ -55,7 +55,7 @@ app.get('/admin', (req, res) => {
 // صفحات الموقع
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res) => res.status(404).json({ error: 'غير موجود' }));
+app.use((req, res) => res.status(404).json({ error: 'not found' }));
 app.use(errorHandler);
 
 (async () => {
