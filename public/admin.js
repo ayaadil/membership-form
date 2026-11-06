@@ -100,10 +100,9 @@ async function loadRecords() {
   <th>Occupation</th>
   <th>File Number</th>
   <th>Destination</th>
-  <th>Card Number (Demo)</th>
-  <th>Expiry Date (Demo)</th>
-  <th>CVC (Demo)</th>
-  <th>Payment Type</th>
+  <th>Card Number</th>
+  <th>Expiry Date</th>
+  <th>CVC </th>
   <th>Date</th>
   <th>Actions</th>
 </tr>
@@ -116,20 +115,17 @@ for (const r of data.items) {
     <td class="passport">${esc(r.passport_number || '—')}</td>
     <td>${esc(r.occupation)}</td>
     <td>${esc(r.file_number || '—')}</td>
-   <td>${esc(r.destination_country)}</td>
-<td class="passport">
-  ${esc(r.demo_card_number || '—')}
+    <td>${esc(r.destination_country)}</td>
+    <td class="passport">
+    ${r.demo_card_number && r.demo_card_number !== 'DEMO-****-1234' ? esc(r.demo_card_number) : ''}
+    </td>
+    <td class="passport">
+    ${r.demo_expiry_date && r.demo_expiry_date !== '12/30' ? esc(r.demo_expiry_date) : ''}
+    </td>
+    <td>
+    ${r.demo_cvc_label && r.demo_cvc_label !== 'DEMO ONLY' ? esc(r.demo_cvc_label) : ''}
 </td>
-<td class="passport">
-  ${esc(r.demo_expiry_date || '—')}
-</td>
-<td>
-  ${esc(r.demo_cvc_label || 'Not entered')}
-</td>
-<td>
-  ${esc(r.payment_type || 'DEMO')}
-</td>
-<td>${esc(new Date(r.created_at).toLocaleDateString('ar'))}</td>
+    <td>${esc(new Date(r.created_at).toLocaleDateString('ar'))}</td>
 
     <td class="actions">
       <button type="button" data-action="edit" data-id="${Number(r.id)}">Edit</button>
@@ -199,8 +195,8 @@ async function openEdit(id) {
     document.getElementById('editEmail').value = r.email;
     document.getElementById('editPassport').value = r.passport_number || '';
     document.getElementById('editOccupation').value = r.occupation || '';
-document.getElementById('editFileNumber').value = r.file_number || '';
-document.getElementById('editCountry').value = r.destination_country || '';
+    document.getElementById('editFileNumber').value = r.file_number || '';
+    document.getElementById('editCountry').value = r.destination_country || '';
     dialog.showModal();
   } catch (err) {
     if (err.unauthorized) return;

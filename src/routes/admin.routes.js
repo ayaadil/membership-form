@@ -144,7 +144,7 @@ router.put(
 
     const [result] = await db.query(`UPDATE user_info SET ${fields.join(', ')} WHERE id = ?`, params);
     if (!result.affectedRows) return res.status(404).json({ error: 'not found' });
-    res.json({ message: 'تم التعديل' });
+    res.json({ message: 'updated' });
   })
 );
 
