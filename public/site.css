@@ -303,3 +303,42 @@ h2 {
   }
   .points { display: none; }
 }
+/* Demo Payment Information */
+
+.payment-section {
+  margin-top: 25px;
+  padding: 22px;
+  border: 1px solid #e4d9d7;
+  border-radius: 16px;
+  background: #fdfbfb;
+}
+
+.payment-section h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.payment-notice {
+  margin: 0 0 18px;
+  font-size: 0.85rem;
+  color: var(--maple-dark);
+  line-height: 1.6;
+}
+
+.payment-section .field {
+  margin-bottom: 15px;
+}
+
+.payment-section .field:last-child {
+  margin-bottom: 0;
+}
+
+.payment-section input.demo-input {
+  direction: ltr;
+  text-align: left;
+  padding: 0 16px;
+  background: #f7f2f1;
+  color: var(--ink);
+  cursor: default;
+}

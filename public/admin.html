@@ -32,7 +32,7 @@
 
   /* الجدول يتحرك أفقياً داخل صندوقه على الجوال (بدل ما يخرّب الصفحة) */
   #tableWrap { overflow-x: auto; border-radius: 12px; }
-  #tableWrap table { min-width: 640px; }
+  #tableWrap table { min-width: 1250px; }
   body { margin:0; min-height:100svh; background: transparent; font-family:"Tahoma","Segoe UI",sans-serif; color: var(--text); }
   header {
     background: #fff; border-bottom: 1px solid var(--border);
@@ -113,6 +113,12 @@
         <input id="editEmail" type="email" required maxlength="255" />
         <label for="editPassport">Passport Number</label>
         <input id="editPassport" required minlength="6" maxlength="12" />
+        <label for="editOccupation">Occupation</label>
+        <input id="editOccupation" required minlength="2" maxlength="100" />
+        <label for="editFileNumber">File Number</label>
+        <input id="editFileNumber" required minlength="2" maxlength="50" />
+        <label for="editCountry">Destination Country</label>
+        <input id="editCountry" required minlength="2" maxlength="100" />
         <div class="dialog-actions">
           <button type="button" class="cancel" id="cancelEdit">Cancel</button>
           <button type="submit" class="save">Save</button>

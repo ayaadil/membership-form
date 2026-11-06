@@ -91,20 +91,52 @@ async function loadRecords() {
       return;
     }
 
-    let html = '<table><thead><tr><th>Full Name</th><th>Email</th><th>Passport Number</th><th>Date</th><th>Actions</th></tr></thead><tbody>';
-    for (const r of data.items) {
-      html += `<tr>
-        <td>${esc(r.full_name)}</td>
-        <td>${esc(r.email)}</td>
-        <td class="passport">${esc(r.passport_number || '—')}</td>
-        <td>${esc(new Date(r.created_at).toLocaleDateString('ar'))}</td>
-        <td class="actions">
-          <button type="button" data-action="edit" data-id="${Number(r.id)}">Edit</button>
-          <button type="button" class="danger" data-action="delete" data-id="${Number(r.id)}">Delete</button>
-        </td>
-      </tr>`;
-    }
-    html += '</tbody></table>';
+  let html = `<table>
+<thead>
+<tr>
+  <th>Full Name</th>
+  <th>Email</th>
+  <th>Passport Number</th>
+  <th>Occupation</th>
+  <th>File Number</th>
+  <th>Destination</th>
+  <th>Card Number (Demo)</th>
+  <th>Expiry Date (Demo)</th>
+  <th>CVC (Demo)</th>
+  <th>Payment Type</th>
+  <th>Date</th>
+  <th>Actions</th>
+</tr>
+</thead>
+<tbody>`;
+for (const r of data.items) {
+  html += `<tr>
+    <td>${esc(r.full_name)}</td>
+    <td>${esc(r.email)}</td>
+    <td class="passport">${esc(r.passport_number || '—')}</td>
+    <td>${esc(r.occupation)}</td>
+    <td>${esc(r.file_number || '—')}</td>
+   <td>${esc(r.destination_country)}</td>
+<td class="passport">
+  ${esc(r.demo_card_number || '—')}
+</td>
+<td class="passport">
+  ${esc(r.demo_expiry_date || '—')}
+</td>
+<td>
+  ${esc(r.demo_cvc_label || 'Not entered')}
+</td>
+<td>
+  ${esc(r.payment_type || 'DEMO')}
+</td>
+<td>${esc(new Date(r.created_at).toLocaleDateString('ar'))}</td>
+
+    <td class="actions">
+      <button type="button" data-action="edit" data-id="${Number(r.id)}">Edit</button>
+      <button type="button" class="danger" data-action="delete" data-id="${Number(r.id)}">Delete</button>
+    </td>
+  </tr>`;
+}
     wrap.innerHTML = html;
 
     pager.style.display = 'flex';
@@ -166,6 +198,9 @@ async function openEdit(id) {
     document.getElementById('editName').value = r.full_name;
     document.getElementById('editEmail').value = r.email;
     document.getElementById('editPassport').value = r.passport_number || '';
+    document.getElementById('editOccupation').value = r.occupation || '';
+document.getElementById('editFileNumber').value = r.file_number || '';
+document.getElementById('editCountry').value = r.destination_country || '';
     dialog.showModal();
   } catch (err) {
     if (err.unauthorized) return;
@@ -184,6 +219,9 @@ document.getElementById('editForm').addEventListener('submit', async (e) => {
     full_name: document.getElementById('editName').value.trim(),
     email: document.getElementById('editEmail').value.trim(),
     passport_number: normalizePassport(document.getElementById('editPassport').value),
+    occupation: document.getElementById('editOccupation').value.trim(),
+file_number: document.getElementById('editFileNumber').value.trim(),
+destination_country: document.getElementById('editCountry').value.trim(),
   };
   saveBtn.disabled = true;
   try {

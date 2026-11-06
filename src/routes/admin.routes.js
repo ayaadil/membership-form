@@ -40,25 +40,44 @@ router.get(
 
     const [[{ total }]] = await db.query(`SELECT COUNT(*) AS total FROM user_info ${w}`, params);
     const [rows] = await db.query(
-      `SELECT id, full_name, email, passport_number, created_at
-       FROM user_info ${w} ORDER BY id DESC LIMIT ? OFFSET ?`,
-      [...params, limit, (page - 1) * limit]
-    );
+  `SELECT
+    id,
+    full_name,
+    email,
+    passport_number,
+    occupation,
+    file_number,
+    destination_country,
+    demo_card_number,
+    demo_expiry_date,
+    demo_cvc_label,
+    payment_type,
+    created_at
+   FROM user_info
+   ${w}
+   ORDER BY id DESC
+   LIMIT ? OFFSET ?`,
+  [...params, limit, (page - 1) * limit]
+);
 
-    res.json({
-      page,
-      limit,
-      total,
-      items: rows.map((r) => {
-        return {
-          id: r.id,
-          full_name: r.full_name,
-          email: r.email,
-          passport_number: safeDecrypt(r.passport_number),
-          created_at: r.created_at,
-        };
-      }),
-    });
+
+res.json({
+  page, limit, total,
+  items: rows.map((r) => ({
+    id: r.id,
+    full_name: r.full_name,
+    email: r.email,
+    passport_number: safeDecrypt(r.passport_number),
+    occupation: r.occupation,
+    file_number: safeDecrypt(r.file_number),
+    destination_country: r.destination_country,
+    demo_card_number: r.demo_card_number,
+    demo_expiry_date: r.demo_expiry_date,
+    demo_cvc_label: r.demo_cvc_label,
+    payment_type: r.payment_type,
+    created_at: r.created_at,
+  })),
+});
   })
 );
 
@@ -67,19 +86,38 @@ router.get(
   '/records/:id',
   validate(idSchema, 'params'),
   asyncHandler(async (req, res) => {
-    const [rows] = await db.query(
-      'SELECT id, full_name, email, passport_number, created_at FROM user_info WHERE id = ?',
-      [req.params.id]
-    );
-    if (!rows.length) return res.status(404).json({ error: 'غير موجود' });
-    const r = rows[0];
-    res.json({
-      id: r.id,
-      full_name: r.full_name,
-      email: r.email,
-      passport_number: safeDecrypt(r.passport_number),
-      created_at: r.created_at,
-    });
+   const [rows] = await db.query(
+  `SELECT
+    id,
+    full_name,
+    email,
+    passport_number,
+    occupation,
+    file_number,
+    destination_country,
+    demo_card_number,
+    demo_expiry_date,
+    demo_cvc_label,
+    payment_type,
+    created_at
+   FROM user_info
+   WHERE id = ?`,
+  [req.params.id]
+);
+if (!rows.length) return res.status(404).json({ error: 'not found' });
+const r = rows[0];
+res.json({
+  id: r.id, full_name: r.full_name, email: r.email,
+  passport_number: safeDecrypt(r.passport_number),
+  occupation: r.occupation,
+  file_number: safeDecrypt(r.file_number),
+  destination_country: r.destination_country,
+  demo_card_number: r.demo_card_number,
+  demo_expiry_date: r.demo_expiry_date,
+  demo_cvc_label: r.demo_cvc_label,
+  payment_type: r.payment_type,
+  created_at: r.created_at,
+});
   })
 );
 
@@ -99,10 +137,13 @@ router.put(
       fields.push('passport_number = ?', 'passport_hash = ?');
       params.push(encrypt(b.passport_number), blindIndex(b.passport_number));
     }
+    if (b.occupation !== undefined) { fields.push('occupation = ?'); params.push(b.occupation); }
+    if (b.file_number !== undefined) { fields.push('file_number = ?'); params.push(encrypt(b.file_number)); }
+    if (b.destination_country !== undefined) { fields.push('destination_country = ?'); params.push(b.destination_country); }
     params.push(req.params.id);
 
     const [result] = await db.query(`UPDATE user_info SET ${fields.join(', ')} WHERE id = ?`, params);
-    if (!result.affectedRows) return res.status(404).json({ error: 'غير موجود' });
+    if (!result.affectedRows) return res.status(404).json({ error: 'not found' });
     res.json({ message: 'تم التعديل' });
   })
 );
@@ -113,8 +154,8 @@ router.delete(
   validate(idSchema, 'params'),
   asyncHandler(async (req, res) => {
     const [result] = await db.query('DELETE FROM user_info WHERE id = ?', [req.params.id]);
-    if (!result.affectedRows) return res.status(404).json({ error: 'غير موجود' });
-    res.json({ message: 'تم الحذف' });
+    if (!result.affectedRows) return res.status(404).json({ error: 'not found' });
+    res.json({ message: 'deleted' });
   })
 );
 

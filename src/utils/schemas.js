@@ -15,8 +15,38 @@ const passport = z
   .toUpperCase()
   .regex(/^[A-Z0-9]{6,12}$/, 'invalid passport');
 
+const occupation = z.string().trim().min(2).max(100);
+const fileNumber = z.string().trim().toUpperCase().max(50);
+const destinationCountry = z.string().trim().min(2).max(100);
+
+
 const createSchema = z
-  .object({ full_name: fullName, email, passport_number: passport })
+  .object({
+    full_name: fullName,
+    email,
+    passport_number: passport,
+    occupation,
+    file_number: fileNumber,
+    destination_country: destinationCountry,
+
+    // Optional demo payment fields
+    demo_card_number: z.string()
+  .trim()
+  .max(32)
+  .regex(
+    /^(?:|TEST-[A-Z0-9]{4,24}|[0-9]{8,20})$/i,
+    'Invalid demo card reference'
+  )
+  .optional()
+  .default(''),
+
+    demo_expiry_date: z.string().trim().max(10).regex(
+      /^[0-9/]*$/,
+      'invalid expiry format'
+    ).optional().default(''),
+
+    demo_cvc_entered: z.boolean().optional().default(false),
+  })
   .strict();
 
 const updateSchema = createSchema
